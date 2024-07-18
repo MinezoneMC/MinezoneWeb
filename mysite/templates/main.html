@@ -1,0 +1,14 @@
+{% load static %}
+<!--Main html file, for the general website layout-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}My Site{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
