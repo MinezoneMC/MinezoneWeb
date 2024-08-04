@@ -4,16 +4,36 @@
 {% block title %} Minezone Official Website {% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h1>Posts</h1>
-        <div class="posts">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <!-- Post Form -->
+    <h2>Create a New Post</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Display Posts -->
+    <h2>Posts</h2>
+    {% if posts %}
+        <ul>
             {% for post in posts %}
-                <div class="post">
-                    <h2 class="post-title">{{ post.title }}</h2>
-                    <p class="post-content">{{ post.content }}</p>
-                    <p class="post-date">Published on: {{ post.date }}</p>
-                </div>
+                <li>
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.content }}</p>
+                    <p><small>Posted by {{ post.author.username }} on {{ post.created_at }}</small></p>
+                </li>
             {% endfor %}
-        </div>
-    </div>
+        </ul>
+    {% else %}
+        <p>No posts available.</p>
+    {% endif %}
+</body>
+</html>
+
 {% endblock %}
