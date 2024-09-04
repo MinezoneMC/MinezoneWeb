@@ -5,22 +5,31 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
 from .models import Post
-# Create views here.
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.models import Group
 
-@login_required
+
 def home(request):
+    can_post = request.user.groups.filter(name='CanMakePosts').exists()    
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save(commit=False)
+            post = form.save(commit=False)      
             post.author = request.user
             post.save()
             return redirect('home')
-    else:
+    else:   
         form = PostForm()
 
     posts = Post.objects.all().order_by('-created_at')  # Fetch all posts, ordered by creation date (most recent first)
-    return render(request, 'main/home.html', {'form': form, 'posts': posts})
+    
+    #Context is a dictionary that passes data to the template
+    context = {
+        'form': form,
+        'posts': posts,
+        'can_post': can_post,
+    }
+    return render(request, 'main/home.html', context)
 
 def signup_view(request):
     if request.method == 'POST':

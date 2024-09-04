@@ -3,23 +3,34 @@
 
 <!DOCTYPE html>
 <html>
-<head>
-    <title>{% block title %}My Site{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
-</head>
-<body>
-    <div class="navbar">
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'game' %}">Game</a>
-        <a href="{% url 'support' %}">Support</a>
-        <a href="{% url 'forum' %}">Forum</a>
-        <a href="{% url 'signup' %}"><button>Sign Up</button></a>
-        <a href="{% url 'login' %}"><button>Log In</button></a>
+    <head>
+        <title>{% block title %}My Site{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'main/style.css' %}">
+        <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+        <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    </head>
+    <body>
+        <div class="navbar">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'game' %}">Game</a>
+            <a href="{% url 'support' %}">Support</a>
+            <a href="{% url 'forum' %}">Forum</a>
+        </div>
 
+        <!-- Navigation -->
+        <nav>
+            {% if user.is_authenticated %}
+                <p>Welcome, {{ user.username }}!</p>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit">Log Out</button>
+                </form>
+            {% else %}
+                <a href="{% url 'signup' %}"><button>Sign Up</button></a>
+                <a href="{% url 'login' %}"><button>Log In</button></a>
+            {% endif %}
 
-    </div>
-
-    {% block content %}
-    {% endblock %}
-</body>
+        {% block content %}
+        {% endblock %}
+    </body>
 </html>
