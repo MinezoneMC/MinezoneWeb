@@ -13,7 +13,7 @@
     <!-- Post Form (visible only to users in the 'CanMakePosts' group) -->
     {% if user.is_authenticated and can_post %}
         <h2>Create a New Post</h2>
-        <form method="post">
+        <form method="post", enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Submit</button>
@@ -29,7 +29,9 @@
                 <div>
                     <h3>{{ post.title }}</h3>
                     <p>{{ post.content }}</p>
+                    <script>console.log("a")</script>
                     {% if post.image %}
+                        <script>console.log("b")</script>
                         <img src="{{ post.image.url }}" alt="Post image">
                     {% endif %}
                     <p><em>Posted by {{ post.author }} on {{ post.created_at }}</em></p>

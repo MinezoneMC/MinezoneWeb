@@ -14,7 +14,7 @@ def home(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            post = form.save(commit=False)      
+            post = form.save(commit=False)
             post.author = request.user
             post.save()
             return redirect('home')
@@ -25,10 +25,11 @@ def home(request):
     
     #Context is a dictionary that passes data to the template
     context = {
-        'form': form,
+        'form': form,   
         'posts': posts,
         'can_post': can_post,
     }
+    print(form.instance)
     return render(request, 'main/home.html', context)
 
 def signup_view(request):
