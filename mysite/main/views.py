@@ -5,32 +5,47 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
 from .models import Post
+from .serializer import *
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import Group
+from rest_framework.response import Response 
+from rest_framework.views import APIView 
 
 
-def home(request):
-    can_post = request.user.groups.filter(name='CanMakePosts').exists()    
-    if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)
+class ReactView(APIView):
+    serializer_class = ReactSerializer
+
+    def get(self, request, *args, **kwargs):
+        # Get all posts
+        posts = Post.objects.all().order_by('-created_at')
+        
+        # Serialize posts
+        serializer = self.serializer_class(posts, many=True)
+        
+        # Check if the user can post
+        can_post = request.user.groups.filter(name='CanMakePosts').exists()
+
+        # Return the serialized data as JSON
+        return Response({
+            'posts': serializer.data,
+            'can_post': can_post
+        })
+
+    def post(self, request, *args, **kwargs):
+        form = PostForm(request.data, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
-            return redirect('home')
-    else:   
-        form = PostForm()
+            # Serialize the newly created post and return it
+            serializer = self.serializer_class(post)
 
-    posts = Post.objects.all().order_by('-created_at')  # Fetch all posts, ordered by creation date (most recent first)
-    
-    #Context is a dictionary that passes data to the template
-    context = {
-        'form': form,   
-        'posts': posts,
-        'can_post': can_post,
-    }
-    print(form.instance)
-    return render(request, 'main/home.html', context)
+            return Response({
+                'message': 'Post created successfully!',
+                'post': serializer.data
+            }, status=201)
+        
+        return Response(form.errors, status=400)
 
 def signup_view(request):
     if request.method == 'POST':
