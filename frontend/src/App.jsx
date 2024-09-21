@@ -10,13 +10,15 @@ const App = () => {
         axios.get('http://localhost:8000')
             .then(res => {
                 data = res.data;
-                setDetails(data);
+                setDetails(data.posts);
             })
             .catch(err => {
                 console.error(err);
             });
     }, []); // Empty dependency array ensures this runs once when the component mounts.
-    console.log(`detail: ${details[0]}`);
+
+    console.log(`details is the ball`, details);
+
     
 
     return (
@@ -25,10 +27,8 @@ const App = () => {
                 <div key={id}>
                     <div>
                         <div>
-                            <h1>{detail.detail}</h1>
-                            <footer>--- by 
-                                <cite title="Source Title">{detail.name}</cite>
-                            </footer>
+                            <h1>{detail.title}</h1>
+                            <p>{detail.content}</p>
                         </div>
                     </div>
                 </div>
