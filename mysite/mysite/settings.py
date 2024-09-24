@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig', #This is the app we created
     'corsheaders', #This is for cross-origin requests
     'rest_framework', #This is for the API
+    'rest_framework_simplejwt', #This is for JWT authentication
 ]
 
 MIDDLEWARE = [
@@ -58,6 +59,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 ROOT_URLCONF = 'mysite.urls'
 
@@ -151,3 +158,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 CORS_ORIGIN_ALLOW_ALL = True 
+
+CORS_ALLOW_CREDENTIALS = True
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "Your_Email"
+EMAIL_HOST_PASSWORD = "Your_Password"
+TIME_ZONE = 'Asia/Kolkata'

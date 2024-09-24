@@ -2,7 +2,17 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# Create models here.
+
+#Token for user authentication
+class Token(models.Model):
+    id = models.AutoField(primary_key=True)
+    token = models.CharField(max_length=255)
+    created_at = models.DateTimeField()
+    expires_at = models.DateTimeField()
+    user_id = models.IntegerField()
+    is_used = models.BooleanField(default=False)
+
+#For post model on the home page
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -13,3 +23,14 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title #Just to make it easier to read in the admin panel
+    
+
+#For user model
+class User(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
+    
+    def __str__(self) -> str:
+        return self.name

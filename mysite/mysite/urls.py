@@ -22,7 +22,7 @@ from main.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls), 
-    path('', ReactView.as_view(), name='home'), 
+    path('', include('main.urls'), name='home'), 
     path('accounts/', include('django.contrib.auth.urls')), 
 ]
 

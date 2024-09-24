@@ -6,11 +6,14 @@ from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
 from .models import Post
 from .serializer import *
-from django.core.exceptions import PermissionDenied
-from django.contrib.auth.models import Group
 from rest_framework.response import Response 
 from rest_framework.views import APIView 
+from django.contrib.auth.hashers import make_password
+from rest_framework import status
+from django.core.mail import send_mail
+import hashlib
 
+SALT = "8b4f6b2cc1868d75ef79e5cfb8779c11b6a374bf0fce05b485581bf4e1e25b96c8c2855015de8449"
 
 class ReactView(APIView):
     serializer_class = ReactSerializer
@@ -47,20 +50,48 @@ class ReactView(APIView):
         
         return Response(form.errors, status=400)
 
-def signup_view(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            user.refresh_from_db()
-            user.save()
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=user.username, password=raw_password)
-            login(request, user)
-            return redirect('home')  # Adjust to your success URL
-    else:
-        form = SignUpForm()
-    return render(request, 'registration/signup.html', {'form': form})
+
+class LoginView(APIView):
+    def post(self, request, format=None):
+        email = request.data["email"]
+        password = request.data["password"]
+        hashed_password = make_password(password=password, salt=SALT)
+        user = User.objects.get(email=email)
+        if user is None or user.password != hashed_password:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid Login Credentials!",
+                },
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                {"success": True, "message": "You are now logged in!"},
+                status=status.HTTP_200_OK,
+            )
+
+
+class SignupView(APIView):
+    def post(self, request, format=None):
+        request.data["password"] = make_password(
+            password=request.data["password"], salt=SALT
+        )
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"success": True, "message": "You are now registered on our website!"},
+                status=status.HTTP_200_OK,
+            )
+        else:
+            error_msg = ""
+            for key in serializer.errors:
+                error_msg += serializer.errors[key][0]
+            return Response(
+                {"success": False, "message": error_msg},
+                status=status.HTTP_200_OK,
+            )
 
 
 
