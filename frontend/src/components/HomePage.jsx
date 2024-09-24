@@ -25,11 +25,12 @@ export default function HomePage() {
 
     return (
         <>
-            <Header/>
+            <Header />
             <div>
-                {details.map((detail, id) => (
-                    <PostItem detail={detail} id={id} />
-                ))}
+                {details.length === 0 ? <PostItem /> :
+                    details.map((detail, id) => (
+                        <PostItem detail={detail} id={id} />
+                    ))}
             </div>
         </>
     );
