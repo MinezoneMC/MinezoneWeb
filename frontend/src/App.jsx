@@ -1,40 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Header from './components/Header';
 
-const App = () => {
-    const [details, setDetails] = useState([]);
+// Import your components
+import HomePage from './components/HomePage';
+import GamePage from './components/GamePage';
+import SupportPage from './components/SupportPage';
 
-    useEffect(() => {
-        let data;
-
-        axios.get('http://localhost:8000')
-            .then(res => {
-                data = res.data;
-                setDetails(data.posts);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, []); // Empty dependency array ensures this runs once when the component mounts.
-
-    console.log(`details is the ball`, details);
-
-    
-
+export default function App() {
     return (
-        <div>
-            {details.map((detail, id) => (
-                <div key={id}>
-                    <div>
-                        <div>
-                            <h1>{detail.title}</h1>
-                            <p>{detail.content}</p>
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </div>
+        <>
+            <Header />
+            <BrowserRouter>
+                <Routes>
+                    <Route index element={<HomePage />} />
+                    <Route path="/games" element={<GamePage />} />
+                    <Route path="/gift" element={<SupportPage />} />
+                </Routes>
+            </BrowserRouter>
+        </>
     );
-};
-
-export default App;
+}
