@@ -41,14 +41,12 @@ def mail_template(content, button_url, button_text):
             </html>"""
 
 class ReactView(APIView):
-    serializer_class = ReactSerializer
-
     def get(self, request, *args, **kwargs):
         # Get all posts
         posts = Post.objects.all().order_by('-created_at')
         
         # Serialize posts
-        serializer = self.serializer_class(posts, many=True)
+        serializer = ReactSerializer(posts, many=True)
         # Check if the user can post
         can_post = request.user.groups.filter(name='CanMakePosts').exists()
 
@@ -56,32 +54,25 @@ class ReactView(APIView):
         return Response({
             'posts': serializer.data,
             'can_post': can_post
-        })
+        }, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        form = PostForm(request.data, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            # Serialize the newly created post and return it
-            serializer = self.serializer_class(post)
-
-            return Response({
-                'message': 'Post created successfully!',
-                'post': serializer.data
-            }, status=201)
+        serializer = ReactSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save(user = request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        return Response(form.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginView(APIView):
     def post(self, request, format=None):
         email = request.data["email"]
         password = request.data["password"]
-        salt = uuid.uuid4().hex # Generate a unique salt for each user
-        hashed_password = make_password(password=password, salt=salt)
+
         user = User.objects.get(email=email)
+        hashed_password = make_password(password=password, salt= user.salt)
+
 
         if user is None or user.password != hashed_password:
             return Response(
@@ -101,6 +92,8 @@ class LoginView(APIView):
 class SignupView(APIView):
     def post(self, request, format=None):
         salt = uuid.uuid4().hex
+
+        request.data["salt"] = salt
         request.data["password"] = make_password(
             password=request.data["password"], salt=salt
         )
@@ -124,6 +117,7 @@ class ResetPasswordView(APIView):
         user_id = request.data["id"]
         token = request.data["token"]
         password = request.data["password"]
+        salt = uuid.uuid4().hex
 
         token_obj = Token.objects.filter(
             user_id=user_id).order_by("-created_at")[0]
@@ -145,7 +139,7 @@ class ResetPasswordView(APIView):
             )
         else:
             token_obj.is_used = True
-            hashed_password = make_password(password=password, salt=SALT)
+            hashed_password = make_password(password=password, salt=salt)
             ret_code = User.objects.filter(
                 id=user_id).update(password=hashed_password)
             if ret_code:
@@ -211,3 +205,25 @@ class ForgotPasswordView(APIView):
                 },
                 status=status.HTTP_200_OK,
             )
+        
+class UserProfileView(APIView):
+    def get(self,request):
+        user = request.user
+        profile = Profile.objects.get(user = user)
+        if profile is not None:
+            serializer = ProfileSerializer(profile)
+            return Response(serializer.data)
+        
+        return Response({"message": "Profile not found!"}, status = status.HTTP_404_NOT_FOUND)
+        
+    def post(self,request, format = None):
+        serializers = ProfileSerializer(data = request.data)
+        if serializers.is_valid():
+            #Ensure that the user is attached to the profile
+            serializers.save(user = request.user)
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializers.errors)
+
+
+

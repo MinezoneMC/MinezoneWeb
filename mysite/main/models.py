@@ -31,6 +31,18 @@ class User(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
+    salt = models.CharField(max_length=255, blank=True)
     
     def __str__(self) -> str:
         return self.name
+    
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(on_delete=models.CASCADE)
+    bio = models.TextField()
+    profile_pic = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.name #Just to make it easier to read in the admin panel

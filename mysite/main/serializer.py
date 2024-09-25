@@ -16,4 +16,11 @@ class TokenSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "name", "email", "password"]
+        fields = ["id", "name", "email", "password","salt"]
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["user", "bio", "profile_pic", "created_at"]
+        read_only_fields = ["user"]  # To ensure user field isn't modified via request
