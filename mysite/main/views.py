@@ -79,9 +79,9 @@ class LoginView(APIView):
     def post(self, request, format=None):
         email = request.data["email"]
         password = request.data["password"]
-        salt = uuid.uuid4().hex # Generate a unique salt for each user
-        hashed_password = make_password(password=password, salt=salt)
         user = User.objects.get(email=email)
+        hashed_password = make_password(password=password, salt=user.salt)
+
 
         if user is None or user.password != hashed_password:
             return Response(
@@ -101,6 +101,8 @@ class LoginView(APIView):
 class SignupView(APIView):
     def post(self, request, format=None):
         salt = uuid.uuid4().hex
+        
+        request.data["salt"] = salt
         request.data["password"] = make_password(
             password=request.data["password"], salt=salt
         )
