@@ -5,4 +5,10 @@
 body {
     background: #262C3A;
     font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+.required:after {
+    content: " *";
+    color: red;
 }

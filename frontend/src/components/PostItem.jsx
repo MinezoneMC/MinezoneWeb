@@ -24,7 +24,7 @@ export default function PostItem({ detail, id }) {
                     <div>
                         <img
                             src={`http://localhost:8000${detail.image}`}
-                            alt={detail.title}
+                            alt=''
                             className="max-h-[16rem]"
                         />
                     </div>

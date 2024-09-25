@@ -10,6 +10,7 @@ import SupportPage from './components/SupportPage';
 export default function App() {
     return (
         <>
+            <Header />
             <BrowserRouter>
                 <Routes>
                     <Route index element={<HomePage />} />
