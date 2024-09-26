@@ -45,3 +45,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.name #Just to make it easier to read in the admin panel
+    
+
+class Forum(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title #Just to make it easier to read in the admin panel
