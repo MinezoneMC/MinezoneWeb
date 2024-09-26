@@ -165,6 +165,7 @@ class ForgotPasswordView(APIView):
             "created_at": created_at,
             "expires_at": expires_at,
             "user_id": user.id,
+            "is_used": False,
         }
 
         serializer = TokenSerializer(data=token_obj)
