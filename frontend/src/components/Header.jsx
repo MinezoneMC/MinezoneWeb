@@ -13,29 +13,34 @@ export default function Header({ isLoggedIn, setIsLoggedIn, name }) {
     };
 
     return (
-        <header className="relative flex flex-col justify-center items-center p-4 gap-10 bg-gray-900 h-60">
-            <div className="absolute inset-0 bg-[url('/HeaderBG.png')] bg-cover bg-center blur-[8px]"></div>
+        <header className="relative flex flex-col justify-center items-center p-4 gap-10 bg-gray-900 h-80">
+            <div className="absolute inset-0 bg-[url('/HeaderBG.png')] bg-cover bg-center blur-[8px]" />
+            <div className="relative z-10 accounts flex justify-end w-screen mr-10">
+                <div className="">
+                    {/* Conditionally render login/logout */}
+                    {isLoggedIn ? (
+                        <div className="flex items-center">
+                            <span className="text-white mr-2">Welcome, {name}</span>
+                            <button
+                                onClick={handleLogout}
+                                className="bg-red-500 text-white px-3 py-1 rounded"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <HeaderButton name="Login" svg={UserIcon} link="/login" style={2} />
+                    )}
+                </div>
+            </div>
             <img className="relative z-10 max-w-48 cursor-pointer" src="./MainIcon.svg" />
             <div className="relative z-10 flex gap-10 items-center">
                 <HeaderButton name="Home" svg={HomeSVG} link="/" />
                 <HeaderButton name="Games" svg={ControllerSVG} link="/games" />
                 <HeaderButton name="Forums" svg={ForumSVG} link="/games" />
                 <HeaderButton name="Support" svg={SupportSVG} link="/support" />
-                <HeaderButton name="Shop" svg={ShopSVG} link="/shop" />
-                {/* Conditionally render login/logout */}
-                {isLoggedIn ? (
-                    <div className="flex items-center">
-                        <span className="text-white mr-2">Welcome, {name}</span>
-                        <button
-                            onClick={handleLogout}
-                            className="bg-red-500 text-white px-3 py-1 rounded"
-                        >
-                            Logout
-                        </button>
-                    </div>
-                ) : (
-                    <HeaderButton name="Login" svg={UserIcon} link="/login" />
-                )}
+                <HeaderButton name="Shop" svg={ShopSVG} link="https://minezone.tebex.io" />
+
             </div>
         </header>
     );
