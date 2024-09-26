@@ -159,11 +159,23 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CORS_ORIGIN_ALLOW_ALL = True 
 
+
+import os
+from dotenv import load_dotenv
+
+# Load the .env file
+load_dotenv()
+
+# Now use the environment variables
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
 CORS_ALLOW_CREDENTIALS = True
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "Your_Email"
-EMAIL_HOST_PASSWORD = "Your_Password"
-TIME_ZONE = 'Asia/Kolkata'
+EMAIL_HOST_USER = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
+TIME_ZONE = 'America/New_York'
+
