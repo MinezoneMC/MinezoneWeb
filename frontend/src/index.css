@@ -4,6 +4,9 @@
 
 body {
     background: #262C3A;
+    background-image: url('assets/siteBG.png');
+    background-repeat: no-repeat;
+    background-size: cover;
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
 }

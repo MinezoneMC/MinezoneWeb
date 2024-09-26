@@ -67,7 +67,37 @@ class ReactView(APIView):
 
 class LoginView(APIView):
     def post(self, request, format=None):
-        email = request.data.get("email")
+        email = request.data["email"]
+        password = request.data["password"]
+        user = User.objects.get(email=email)
+        hashed_password = make_password(password=password, salt=user.salt)
+
+
+        if user is None or user.password != hashed_password:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Invalid Login Credentials!",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        else:
+            return Response(
+                {"success": True, "message": "You are now logged in!", "user": user.name},
+                status=status.HTTP_200_OK,
+            )
+
+
+class SignupView(APIView):
+    def post(self, request, format=None):
+        salt = uuid.uuid4().hex
+        
+        request.data["salt"] = salt
+        request.data["password"] = make_password(
+            password=request.data["password"], salt=salt
+        )
+
+        serializer = UserSerializer(data=request.data)
         
         try:
             user = User.objects.get(email=email)
