@@ -98,69 +98,52 @@ class SignupView(APIView):
         )
 
         serializer = UserSerializer(data=request.data)
-        
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            return Response(
-                {"success": False, "message": "No user found with this email."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-        
-        created_at = timezone.now()
-        expires_at = created_at + timezone.timedelta(days=1)  # Token expires in 1 day
-        salt = uuid.uuid4().hex  # Generates a random UUID, converted to a string of hex digits.
-        
-        # Use a secure way to hash the password
-        token = hashlib.sha512(
-            (str(user.id) + user.password + created_at.isoformat() + salt).encode("utf-8")
-        ).hexdigest()
-        
-        token_obj = {
-            "token": token,
-            "created_at": created_at,
-            "expires_at": expires_at,
-            "user_id": user.id,
-        }
-        
-        serializer = TokenSerializer(data=token_obj)
+
         if serializer.is_valid():
-            serializer.save()
-            
-            # Prepare email content
-            subject = "Forgot Password Link"
-            content = mail_template(
-                "We have received a request to reset your password. Please reset your password using the link below.",
-                f"{URL}/resetPassword?id={user.id}&token={token}",
-                "Reset Password",
-            )
-            
-            send_mail(
-                subject=subject,
-                message='',
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[email],
-                html_message=content,
-            )
-            
+            serializer.save(user = request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ResetPasswordView(APIView):
+    def post(self, request, format=None):
+        user_id = request.data["id"]
+        token = request.data["token"]
+        password = request.data["password"]
+        salt = uuid.uuid4().hex
+
+        token_obj = Token.objects.filter(
+            user_id=user_id).order_by("-created_at")[0]
+        if token_obj.expires_at < timezone.now():
             return Response(
                 {
-                    "success": True,
-                    "message": "A password reset link has been sent to your email.",
+                    "success": False,
+                    "message": "Password Reset Link has expired!",
+                },
+                status=status.HTTP_200_OK,
+            )
+        elif token_obj is None or token != token_obj.token or token_obj.is_used:
+            return Response(
+                {
+                    "success": False,
+                    "message": "Reset Password link is invalid!",
                 },
                 status=status.HTTP_200_OK,
             )
         else:
-            error_msg = "".join(serializer.errors[key][0] for key in serializer.errors)
-            return Response(
-                {
-                    "success": False,
-                    "message": error_msg,
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-
+            token_obj.is_used = True
+            hashed_password = make_password(password=password, salt=salt)
+            ret_code = User.objects.filter(
+                id=user_id).update(password=hashed_password)
+            if ret_code:
+                token_obj.save()
+                return Response(
+                    {
+                        "success": True,
+                        "message": "Your password reset was successfully!",
+                    },
+                    status=status.HTTP_200_OK,
+                )
 
 class ForgotPasswordView(APIView):
     def post(self, request, format=None):
