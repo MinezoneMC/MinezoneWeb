@@ -19,7 +19,7 @@ import uuid
 from django.utils import timezone
 
 
-URL = "http://localhost:8000"
+URL = "http://localhost:5173"
 
 def mail_template(content, button_url, button_text):
     return f"""<!DOCTYPE html>
@@ -59,7 +59,7 @@ class ReactView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = ReactSerializer(data = request.data)
         if serializer.is_valid():
-            serializer.save(user = request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
