@@ -151,18 +151,22 @@ class ForgotPasswordView(APIView):
         user = User.objects.get(email=email)
         created_at = timezone.now()
         expires_at = timezone.now() + timezone.timedelta(1) # token expires in 1 day
-        salt = uuid.uuid4().hex # generates a random UUID, which is a 128-bit value. Which is then converted to a string of hex digits.
+        salt = uuid.uuid4().hex
+
+        # Generate token
         token = hashlib.sha512(
             (str(user.id) + user.password + created_at.isoformat() + salt).encode(
                 "utf-8"
             )
         ).hexdigest()
+
         token_obj = {
             "token": token,
             "created_at": created_at,
             "expires_at": expires_at,
             "user_id": user.id,
         }
+        
         serializer = TokenSerializer(data=token_obj)
         if serializer.is_valid():
             serializer.save()
