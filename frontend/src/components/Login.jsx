@@ -14,7 +14,7 @@ export default function Login({ setIsLoggedIn, setName, setEmail }) {
             password: passwordInput,
         })
             .then(response => {
-                console.log('Response data:', response.data); // Add this line
+                console.log('Response data:', response.data);
                 setIsLoggedIn(true);
                 setName(response.data.user);
                 setEmail(response.data.email);
@@ -26,14 +26,13 @@ export default function Login({ setIsLoggedIn, setName, setEmail }) {
             });
     };
 
-
     return (
         <div className="flex flex-col items-center gap-4 h-screen">
             <form onSubmit={handleLogin}
                 className='bg-gray-200 flex flex-col justify-center items-center gap-4 p-4 rounded-md shadow-md
                 m-4'>
                 <h2 className='text-4xl font-semibold'>Login</h2>
-                <div bg-gray-200>
+                <div>
                     <input
                         className='rounded-md'
                         placeholder='Email'
@@ -43,7 +42,7 @@ export default function Login({ setIsLoggedIn, setName, setEmail }) {
                         required
                     />
                 </div>
-                <div className='bg-gray-200'>
+                <div>
                     <input
                         className='rounded-md'
                         placeholder='Password'
@@ -53,12 +52,14 @@ export default function Login({ setIsLoggedIn, setName, setEmail }) {
                         required
                     />
                 </div>
-                <button type="submit" className='bg-gradient-to-b from-[#5e99f0] to-[#1c6bbb]
-                    p-2, rounded-md p-2'>
+                <button type="submit" className='bg-gradient-to-b from-[#5e99f0] to-[#1c6bbb] p-2 rounded-md'>
                     Login
                 </button>
                 <p>
                     Don't have an account? <Link to="/register">Register here</Link>
+                </p>
+                <p>
+                    Forgot your password? <Link to="/forgotPassword">Reset it here</Link>
                 </p>
             </form>
         </div>

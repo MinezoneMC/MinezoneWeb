@@ -8,6 +8,8 @@ import GamePage from './components/GamePage';
 import SupportPage from './components/SupportPage';
 import Login from './components/Login';
 import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
 
 export default function App() {
     // Authentication state variables
@@ -48,6 +50,8 @@ export default function App() {
                         />
                     }
                 />
+                <Route path="/forgotPassword" element={<ForgotPassword />} />
+                <Route path="/resetPassword" element={<ResetPassword />} />
             </Routes>
         </BrowserRouter>
     );
