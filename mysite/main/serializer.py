@@ -12,7 +12,7 @@ class ReactSerializer(serializers.ModelSerializer):
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Token
-        fields = ["token", "created_at", "expires_at", "user_id"]
+        fields = ["token", "created_at", "expires_at", "user_id", "is_used"]
 
 
 class UserSerializer(serializers.ModelSerializer):
