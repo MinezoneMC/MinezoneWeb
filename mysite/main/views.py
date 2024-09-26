@@ -221,5 +221,3 @@ class UserProfileView(APIView):
         else:
             return Response(serializers.errors)
 
-
-
