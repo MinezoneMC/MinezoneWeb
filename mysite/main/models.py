@@ -56,3 +56,7 @@ class Forum(models.Model):
 
     def __str__(self):
         return self.title #Just to make it easier to read in the admin panel
+    
+class Comment(models.Model):
+    content = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
