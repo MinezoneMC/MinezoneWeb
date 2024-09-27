@@ -17,7 +17,7 @@ export default function PostItem({ detail, id }) {
     }
 
     return (
-        <div className="bg-gray-50 rounded-lg p-4 shadow-md m-4 flex flex-col gap-4">
+        <div className="bg-gray-200 rounded-lg p-4 shadow-md m-4 flex flex-col gap-4">
             {detail ? (
                 <>
                     <h1 className="text-4xl font-semibold">{detail.title}</h1>
@@ -29,7 +29,7 @@ export default function PostItem({ detail, id }) {
                         />
                     </div>
                     <p>{detail.content}</p>
-                    <div className="bg-gray-200 p-2">
+                    <div className="bg-gray-400 p-2">
                         <p>Posted by {detail.author} on {formatDate(detail.created_at)}</p>
                     </div>
                 </>
