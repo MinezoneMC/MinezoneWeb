@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function HeaderButton({ name, svg, link, style }) {
     return (
         <>
@@ -17,7 +19,7 @@ export default function HeaderButton({ name, svg, link, style }) {
                     </button>
                 </a>
             ) : (
-                <a href={link}>
+                <Link to={link}>
                     <button
                         className="bg-gradient-to-b from-[#327cec] to-[#1c6bbb]
                         h-12 px-7 rounded-[5px] 
@@ -30,7 +32,7 @@ export default function HeaderButton({ name, svg, link, style }) {
                             {name}
                         </span>
                     </button>
-                </a>
+                </Link>
             )}
         </>
     );

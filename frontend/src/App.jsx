@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 
@@ -12,10 +12,22 @@ import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 
 export default function App() {
-    // Authentication state variables
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
+    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+        return JSON.parse(localStorage.getItem('isLoggedIn')) || false;
+    });
+    const [name, setName] = useState(() => {
+        return localStorage.getItem('name') || '';
+    });
+    const [email, setEmail] = useState(() => {
+        return localStorage.getItem('email') || '';
+    });
+
+    // Update localStorage whenever authentication state changes
+    useEffect(() => {
+        localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn));
+        localStorage.setItem('name', name);
+        localStorage.setItem('email', email);
+    }, [isLoggedIn, name, email]);
 
     return (
         <BrowserRouter>
@@ -25,6 +37,8 @@ export default function App() {
                 setIsLoggedIn={setIsLoggedIn}
                 name={name}
                 email={email}
+                setName={setName}
+                setEmail={setEmail}
             />
             <Routes>
                 <Route index element={<HomePage />} />

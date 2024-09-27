@@ -10,6 +10,13 @@ import { Link } from 'react-router-dom';
 export default function Header({ isLoggedIn, setIsLoggedIn, name }) {
     const handleLogout = () => {
         setIsLoggedIn(false);
+        setName('');
+        setEmail('');
+
+        // Clear localStorage
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('name');
+        localStorage.removeItem('email');
     };
 
     return (
