@@ -64,28 +64,26 @@ class ReactView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class LoginView(APIView):
     def post(self, request, format=None):
         email = request.data["email"]
         password = request.data["password"]
-        user = User.objects.get(email=email)
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
+        
         hashed_password = make_password(password=password, salt=user.salt)
-
-
-        if user is None or user.password != hashed_password:
-            return Response(
-                {
-                    "success": False,
-                    "message": "Invalid Login Credentials!",
-                },
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        if user.password != hashed_password:
+            return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(
-                {"success": True, "message": "You are now logged in!", "user": user.name},
-                status=status.HTTP_200_OK,
-            )
+            return Response({
+                "success": True,
+                "message": "You are now logged in!",
+                "user": user.name,
+                "email": user.email,
+                "user_id": user.id 
+            }, status=status.HTTP_200_OK)
 
 
 class SignupView(APIView):
@@ -194,7 +192,7 @@ class ForgotPasswordView(APIView):
         else:
             error_msg = ""
             for key in serializer.errors:
-                error_msg += serializer.errors[key][0]
+                error_msg += serializer.errors[key][0] 
             return Response(
                 {
                     "success": False,
@@ -222,3 +220,27 @@ class UserProfileView(APIView):
         else:
             return Response(serializers.errors)
 
+class ForumView(APIView):
+    def get(self, request):
+        posts = Forum.objects.all().order_by('-created_at')
+        serializer = ForumSerializer(posts, many = True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request):
+        serializer = ForumSerializer(data = request.data)
+        if serializer.is_valid():
+            return Response(serializer.data, status= status.HTTP_201_CREATED)
+        
+        else:
+            return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        
+# views.py
+class UserProfileDetailView(APIView):
+    def get(self, request, user_id):
+        try:
+            profile = Profile.objects.get(user__id=user_id)
+            serializer = ProfileSerializer(profile)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Profile.DoesNotExist:
+            return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
+        
