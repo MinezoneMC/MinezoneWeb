@@ -134,7 +134,7 @@ class ResetPasswordView(APIView):
             token_obj.is_used = True
             hashed_password = make_password(password=password, salt=salt)
             ret_code = User.objects.filter(
-                id=user_id).update(password=hashed_password)
+                id=user_id).update(password=hashed_password,salt = salt)
             if ret_code:
                 token_obj.save()
                 return Response(
