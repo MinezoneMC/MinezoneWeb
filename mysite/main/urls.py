@@ -10,7 +10,8 @@ urlpatterns = [
     path("resetPassword", ResetPasswordView.as_view(), name="resetPassword"),
     path("profile", UserProfileView.as_view(), name="profile"),
     path("forum", ForumView.as_view(), name="forum"),
-    path("profile/<int:user_id>/", UserProfileDetailView.as_view(), name="user_profile")
+    path("profile/<int:user_id>/", UserProfileDetailView.as_view(), name="user_profile"),
+    path('forums/<int:forum_id>/comments/', CommentView.as_view(), name="comment"),
     
 
 ] 
