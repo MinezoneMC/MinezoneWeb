@@ -45,7 +45,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['content', 'author', 'forum', 'created_at']
+        fields = ['id', 'content', 'author', 'forum', 'created_at']
 
 
 
@@ -55,6 +55,6 @@ class ForumSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Forum
-        fields = ['title', 'content', 'author', 'created_at', 'comments']
+        fields = ['id','title', 'content', 'author', 'created_at', 'comments']
 
 
