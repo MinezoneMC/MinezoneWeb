@@ -234,15 +234,15 @@ class ForumView(APIView):
         else:
             return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
         
-class UserProfileDetailView(APIView):
-    def get(self, request, user_id):
-        try:
-            profile = Profile.objects.get(user__id=user_id)
-            serializer = ProfileSerializer(profile)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Profile.DoesNotExist:
-            return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
-        
+    class UserProfileDetailView(APIView):
+        def get(self, request, user_id):
+            try:
+                profile = Profile.objects.get(user__id=user_id)
+                serializer = ProfileSerializer(profile)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Profile.DoesNotExist:
+                return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
+            
 
 class CommentView(APIView):
     def get(self, request, forum_id):
