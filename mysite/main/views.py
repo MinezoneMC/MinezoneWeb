@@ -223,17 +223,27 @@ class UserProfileView(APIView):
 class ForumView(APIView):
     def get(self, request):
         posts = Forum.objects.all().order_by('-created_at')
-        serializer = ForumSerializer(posts, many = True)
+        serializer = ForumSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
-        serializer.save(author=request.user)
-        serializer = ForumSerializer(data = request.data)
+        serializer = ForumSerializer(data=request.data)
         if serializer.is_valid():
-            return Response(serializer.data, status= status.HTTP_201_CREATED)
-        
+            serializer.save(author=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class ForumDetailView(APIView):
+    def get(self, request, forum_id):
+        try:
+            forum = Forum.objects.get(id=forum_id)
+            serializer = ForumSerializer(forum)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Forum.DoesNotExist:
+            return Response({"message": "Forum not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+
         
 class UserProfileDetailView(APIView):
     def get(self, request, user_id):
@@ -252,11 +262,15 @@ class CommentView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, forum_id):
-        forum = Forum.objects.get(id=forum_id)
-        serializer = CommentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user, forum=forum)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            forum = Forum.objects.get(id=forum_id)
+            serializer = CommentSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(author=request.user, forum=forum)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Forum.DoesNotExist:
+            return Response({"message": "Forum not found"}, status=status.HTTP_404_NOT_FOUND)
+
 
         

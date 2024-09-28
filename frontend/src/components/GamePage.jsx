@@ -13,17 +13,17 @@ export default function GamePage() {
     }
 
     return (
-        <div className="w-screen flex justify-center mt-10 h-[80rem]">
+        <div className="w-screen flex justify-center mt-10 h-auto sm:h-[80rem]">
             <div className="flex flex-col h-max w-11/12 p-8 bg-[#11141E]">
-                <h1 className="text-[5rem] font-bold text-white mb-2">GAMES</h1>
-                <p className="text-4xl text-gray-50">
+                <h1 className="text-3xl sm:text-[5rem] font-bold text-white mb-8">GAMES</h1>
+                <p className="text-base sm:text-4xl text-gray-50">
                     Introducing the Minezone Network, home of
                     <span className="font-semibold text-[#FFC700]"> SUPER CRAFT BROS</span>. We're not
                     just stopping there—new games are on the way and will be available on
                     the server soon. Play now at minezone.club
                 </p>
 
-                <div className="flex flex-wrap gap-4 mt-8">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8">
                     <GameCard image={SuperCraftBrosIMG}
                         title='Super Craft Bros'
                         colorHex='#FFC700'

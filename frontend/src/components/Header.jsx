@@ -44,7 +44,7 @@ export default function Header({ isLoggedIn, setIsLoggedIn, name }) {
             <div className="relative z-10 flex gap-10 items-center">
                 <HeaderButton name="Home" svg={HomeSVG} link="/" />
                 <HeaderButton name="Games" svg={ControllerSVG} link="/games" />
-                <HeaderButton name="Forums" svg={ForumSVG} link="/games" />
+                <HeaderButton name="Forums" svg={ForumSVG} link="/forums" />
                 <HeaderButton name="Support" svg={SupportSVG} link="/support" />
                 <HeaderButton name="Shop" svg={ShopSVG} link="https://minezone.tebex.io" />
 

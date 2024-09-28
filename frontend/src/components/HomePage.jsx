@@ -23,7 +23,7 @@ export default function HomePage() {
     const totalPages = Math.ceil(details.length / postsPerPage);
 
     return (
-        <div className='flex flex-col w-screen items-center'>
+        <div className='flex flex-col w-screen items-center bg-black'>
             <div className='max-w-screen-xl'>
                 {currentPosts.length === 0 ? (
                     <p>No posts available.</p>
