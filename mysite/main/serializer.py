@@ -40,10 +40,21 @@ class ReactSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'content', 'image', 'author', 'author_id', 'created_at']
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['content', 'author', 'forum', 'created_at']
+
+
+
 class ForumSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)  # Add this to include comments
+
     class Meta:
-        model = Forum   
-        fields = ["title", "content", "author", "created_at"]
+        model = Forum
+        fields = ['title', 'content', 'author', 'created_at', 'comments']
 
 
