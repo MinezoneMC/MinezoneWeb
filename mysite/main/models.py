@@ -12,7 +12,7 @@ class Token(models.Model):
     user_id = models.IntegerField()
     is_used = models.BooleanField(default=False)
 
-#For post model on the home page
+#For posts on the home page
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -22,10 +22,8 @@ class Post(models.Model):
 
 
     def __str__(self):
-        return self.title #Just to make it easier to read in the admin panel
+        return self.title
     
-
-#For user model
 class User(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -36,18 +34,6 @@ class User(models.Model):
     def __str__(self) -> str:
         return self.name
     
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    bio = models.TextField()
-    profile_pic = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user.name #Just to make it easier to read in the admin panel
-    
-
 class Forum(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -55,7 +41,7 @@ class Forum(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title #Just to make it easier to read in the admin panel
+        return self.title
     
 class Comment(models.Model):
     content = models.TextField()
@@ -65,3 +51,11 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment by {self.author} on {self.forum}'
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    bio = models.TextField(blank=True, null=True)
+    profile_pic = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"

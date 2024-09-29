@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 import hashlib
 import uuid
 from django.utils import timezone
-
+from rest_framework import status, permissions
 
 URL = "http://localhost:5173"
 
@@ -201,25 +201,6 @@ class ForgotPasswordView(APIView):
                 status=status.HTTP_200_OK,
             )
         
-class UserProfileView(APIView):
-    def get(self,request):
-        user = request.user
-        profile = Profile.objects.get(user = user)
-        if profile is not None:
-            serializer = ProfileSerializer(profile)
-            return Response(serializer.data)
-        
-        return Response({"message": "Profile not found!"}, status = status.HTTP_404_NOT_FOUND)
-        
-    def post(self,request, format = None):
-        serializers = ProfileSerializer(data = request.data)
-        if serializers.is_valid():
-            #Ensure that the user is attached to the profile
-            serializers.save(user = request.user)
-            return Response(serializers.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializers.errors)
-
 class ForumView(APIView):
     def get(self, request):
         posts = Forum.objects.all().order_by('-created_at')
@@ -245,18 +226,7 @@ class ForumDetailView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Forum.DoesNotExist:
             return Response({"message": "Forum not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-
-        
-class UserProfileDetailView(APIView):
-    def get(self, request, user_id):
-        try:
-            profile = Profile.objects.get(user__id=user_id)
-            serializer = ProfileSerializer(profile)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Profile.DoesNotExist:
-            return Response({"message": "Profile not found!"}, status=status.HTTP_404_NOT_FOUND)
-        
+                
 
 class CommentView(APIView):
     def get(self, request, forum_id):
@@ -273,9 +243,7 @@ class CommentView(APIView):
                 "content": request.data.get("content"), 
             }
             
-            serializer = CommentSerializer(data=comment_data)
-            print(comment_data)
-            
+            serializer = CommentSerializer(data=comment_data)            
             if serializer.is_valid():
                 serializer.save(author=user, forum=forum)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -288,4 +256,24 @@ class CommentView(APIView):
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
-        
+class UserProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            profile = request.user.profile
+            serializer = UserProfileSerializer(profile)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except UserProfile.DoesNotExist:
+            return Response({"message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request):
+        try:
+            profile = request.user.profile
+            serializer = UserProfileSerializer(profile, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except UserProfile.DoesNotExist:
+            return Response({"message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
