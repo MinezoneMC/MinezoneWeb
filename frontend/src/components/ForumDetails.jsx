@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-export default function ForumDetail() {
+export default function ForumDetail({author}) {
     const [forum, setForum] = useState(null);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
@@ -11,7 +11,7 @@ export default function ForumDetail() {
     useEffect(() => {
         const fetchForumAndComments = async () => {
             try {
-                const forumResponse = await axios.get(`http://localhost:8000/forum/${id}`);
+                const forumResponse = await axios.get(`http://localhost:8000/forum/${id}/`);
                 setForum(forumResponse.data);
 
                 const commentsResponse = await axios.get(`http://localhost:8000/forums/${id}/comments/`);
@@ -28,7 +28,8 @@ export default function ForumDetail() {
         e.preventDefault();
         try {
             const response = await axios.post(`http://localhost:8000/forums/${id}/comments/`, {
-                content: newComment
+                content: newComment,
+                author: author
             });
             setComments([...comments, response.data]);
             setNewComment('');

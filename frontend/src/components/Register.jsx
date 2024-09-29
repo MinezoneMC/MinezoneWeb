@@ -10,7 +10,7 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
 
     const handleRegister = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8000/signup', {
+        axios.post('http://localhost:8000/signup/', {
             name: nameInput,
             email: emailInput,
             password: passwordInput,

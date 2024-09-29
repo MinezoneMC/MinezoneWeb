@@ -14,7 +14,7 @@ export default function PostForum({author}) {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:8000/forum', {
+            const response = await axios.post('http://localhost:8000/forum/', {
                 title,
                 content,
                 author

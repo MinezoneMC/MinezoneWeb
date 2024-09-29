@@ -41,7 +41,8 @@ class ReactSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
+    author = serializers.StringRelatedField()  
+    forum = serializers.StringRelatedField()   
 
     class Meta:
         model = Comment

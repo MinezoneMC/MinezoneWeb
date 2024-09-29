@@ -30,7 +30,7 @@ export default function ResetPassword() {
             return;
         }
 
-        axios.post('http://localhost:8000/resetPassword', {
+        axios.post('http://localhost:8000/resetPassword/', {
             id: userId,
             token: token,
             password: passwordInput,
