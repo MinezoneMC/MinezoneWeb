@@ -7,7 +7,7 @@ import SupportSVG from '../assets/support.svg';
 import UserIcon from '../assets/user.svg';
 import { Link } from 'react-router-dom';
 
-export default function Header({ isLoggedIn, setIsLoggedIn, name }) {
+export default function Header({ isLoggedIn, setIsLoggedIn, name, setName, setEmail }) {
     const handleLogout = () => {
         setIsLoggedIn(false);
         setName('');

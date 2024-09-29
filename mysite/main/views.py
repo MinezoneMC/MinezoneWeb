@@ -77,7 +77,6 @@ class LoginView(APIView):
         if user.password != hashed_password:
             return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            login(request, user)
             return Response({
                 "success": True,
                 "message": "You are now logged in!",
