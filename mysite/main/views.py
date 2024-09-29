@@ -267,13 +267,25 @@ class CommentView(APIView):
     def post(self, request, forum_id):
         try:
             forum = Forum.objects.get(id=forum_id)
-            serializer = CommentSerializer(data=request.data)
+            user_req = request.data.get("author")
+            user = User.objects.get(name=user_req)
+            comment_data = {
+                "content": request.data.get("content"), 
+            }
+            
+            serializer = CommentSerializer(data=comment_data)
+            print(comment_data)
+            
             if serializer.is_valid():
-                serializer.save(author=request.user, forum=forum)
+                serializer.save(author=user, forum=forum)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         except Forum.DoesNotExist:
             return Response({"message": "Forum not found"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
         

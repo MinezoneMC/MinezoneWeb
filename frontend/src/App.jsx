@@ -46,7 +46,7 @@ export default function App() {
                 <Route index element={<HomePage />} />
                 <Route path="/games" element={<GamePage />} />
                 <Route path="/forums" element={<ForumsPage />} />
-                <Route path="/forum/:id" element={<ForumDetail />} />
+                <Route path="/forum/:id" element={<ForumDetail author={name}/>} />
                 <Route path="/create-forum" element={<PostForum author={name}/>}/>
                 <Route path="/support" element={<SupportPage />} />
                 <Route
