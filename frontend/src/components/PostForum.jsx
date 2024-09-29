@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export default function PostForum() {
+export default function PostForum({author}) {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [user, setUser] = useState('');
@@ -16,7 +16,8 @@ export default function PostForum() {
         try {
             const response = await axios.post('http://localhost:8000/forum', {
                 title,
-                content
+                content,
+                author
             });
             console.log('Forum post created:', response.data);
             navigate('/forums'); // Redirect to forums page after successful post

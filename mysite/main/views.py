@@ -77,6 +77,7 @@ class LoginView(APIView):
         if user.password != hashed_password:
             return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
         else:
+            login(request, user)
             return Response({
                 "success": True,
                 "message": "You are now logged in!",
@@ -227,10 +228,12 @@ class ForumView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
+        user_req = request.data["author"]
+        user = User.objects.get(name=user_req)
         serializer = ForumSerializer(data=request.data)
         print(request.data)
         if serializer.is_valid():
-            serializer.save(author=request.author)
+            serializer.save(author=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
