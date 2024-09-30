@@ -18,6 +18,7 @@ import hashlib
 import uuid
 from django.utils import timezone
 from rest_framework import status, permissions
+from rest_framework.parsers import MultiPartParser, FormParser
 
 URL = "http://localhost:5173"
 
@@ -258,26 +259,25 @@ class CommentView(APIView):
 
 
 class UserProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def get(self, request, user_id):
         try:
             fetched_user = User.objects.get(id=user_id)
-            data = UserProfile.objects.get(user=fetched_user)
-            serializer = UserProfileSerializer(data)
+            profile, created = UserProfile.objects.get_or_create(user=fetched_user)
+            serializer = UserProfileSerializer(profile)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except UserProfile.DoesNotExist:
-            return Response({"message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, user_id):
         try:
-            
             fetched_user = User.objects.get(id=user_id)
-            data = UserProfile.objects.get(user=fetched_user)
-            serializer = UserProfileSerializer(data)
+            profile, created = UserProfile.objects.get_or_create(user=fetched_user)
+            serializer = UserProfileSerializer(profile, data=request.data, partial=True)
             if serializer.is_valid():
-                serializer.save(id = data.user.id)
+                serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except UserProfile.DoesNotExist:
-            return Response({"message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)

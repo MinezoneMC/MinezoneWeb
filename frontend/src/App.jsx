@@ -13,6 +13,7 @@ import ResetPassword from './components/ResetPassword';
 import ForumsPage from './components/ForumsPage';
 import ForumDetail from './components/ForumDetails'; 
 import PostForum from './components/PostForum';
+import ProfileSetup from './components/ProfileSetup';
 
 export default function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -71,6 +72,7 @@ export default function App() {
                 />
                 <Route path="/forgotPassword" element={<ForgotPassword />} />
                 <Route path="/resetPassword" element={<ResetPassword />} />
+                <Route path="/profile-setup" element={<ProfileSetup />} />
             </Routes>
         </BrowserRouter>
     );

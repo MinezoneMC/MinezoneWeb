@@ -9,7 +9,7 @@ urlpatterns = [
     path("forgotPassword/", ForgotPasswordView.as_view(), name="forgotPassword"),
     path("resetPassword/", ResetPasswordView.as_view(), name="resetPassword"),
     path("forum/", ForumView.as_view(), name="forum"),
-    path("forum/", UserProfileView.as_view(), name="profile"),
+    path('profile/<int:user_id>/', UserProfileView.as_view(), name='profile'),
     path("forum/<int:forum_id>/", ForumDetailView.as_view(), name="forum_detail"),
     path('forums/<int:forum_id>/comments/', CommentView.as_view(), name="comment"),
     

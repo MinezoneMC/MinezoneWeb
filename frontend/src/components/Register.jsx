@@ -19,7 +19,11 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
                 setIsLoggedIn(true);
                 setName(response.data.name);
                 setEmail(response.data.email);
-                navigate('/'); // Redirect to home page
+
+                // Store user id in localStorage
+                localStorage.setItem('user_id', response.data.id);
+
+                navigate('/profile-setup'); // Redirect to profile setup page
             })
             .catch(error => {
                 console.error(error);
