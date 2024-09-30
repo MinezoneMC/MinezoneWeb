@@ -70,6 +70,7 @@ class LoginView(APIView):
         password = request.data["password"]
         try:
             user = User.objects.get(email=email)
+            print(user.id)
         except User.DoesNotExist:
             return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -94,10 +95,10 @@ class SignupView(APIView):
         request.data["password"] = make_password(
             password=request.data["password"], salt=salt
         )
-
         serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
+
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -259,20 +260,23 @@ class CommentView(APIView):
 class UserProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request, user_id):
         try:
-            profile = request.user.profile
-            serializer = UserProfileSerializer(profile)
+            fetched_user = User.objects.get(id=user_id)
+            data = UserProfile.objects.get(user=fetched_user)
+            serializer = UserProfileSerializer(data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except UserProfile.DoesNotExist:
             return Response({"message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request):
+    def post(self, request, user_id):
         try:
-            profile = request.user.profile
-            serializer = UserProfileSerializer(profile, data=request.data, partial=True)
+            
+            fetched_user = User.objects.get(id=user_id)
+            data = UserProfile.objects.get(user=fetched_user)
+            serializer = UserProfileSerializer(data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(id = data.user.id)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except UserProfile.DoesNotExist:
