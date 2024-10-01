@@ -170,7 +170,7 @@ class ForgotPasswordView(APIView):
             send_mail(
                 subject=subject,
                 message=content,
-                from_email=settings.EMAIL_HOST_USER,
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[email],
                 html_message=content,
             )
