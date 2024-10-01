@@ -18,6 +18,10 @@ export default function Login({ setIsLoggedIn, setName, setEmail }) {
                 setIsLoggedIn(true);
                 setName(response.data.user);
                 setEmail(response.data.email);
+                localStorage.setItem('isLoggedIn', true);
+                localStorage.setItem('name', response.data.user);
+                localStorage.setItem('email', response.data.email);
+                localStorage.setItem('user_id', response.data.user_id);
                 navigate('/'); // Redirect to home page
             })
             .catch(error => {

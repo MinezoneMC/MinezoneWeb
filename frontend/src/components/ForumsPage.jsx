@@ -1,3 +1,4 @@
+// ForumsPage.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -37,7 +38,17 @@ export default function ForumsPage() {
                     <Link to={`/forum/${forum.id || forum._id}`} key={forum.id || forum._id} className="mb-4">
                         <div className="bg-gray-200 rounded-lg p-4 shadow-md hover:bg-gray-300 transition duration-300">
                             <h2 className="text-2xl font-semibold">{forum.title}</h2>
-                            <p className="text-gray-600">by {forum.author} on {new Date(forum.created_at).toLocaleString()}</p>
+                            <p className="text-gray-600">
+                                by{' '}
+                                <Link
+                                    to={`/user/${forum.author_id}`}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="text-blue-500 hover:underline"
+                                >
+                                    {forum.author}
+                                </Link>{' '}
+                                on {new Date(forum.created_at).toLocaleString()}
+                            </p>
                         </div>
                     </Link>
                 ))}

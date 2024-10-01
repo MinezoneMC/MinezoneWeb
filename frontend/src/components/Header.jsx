@@ -17,6 +17,7 @@ export default function Header({ isLoggedIn, setIsLoggedIn, name, setName, setEm
         localStorage.removeItem('isLoggedIn');
         localStorage.removeItem('name');
         localStorage.removeItem('email');
+        localStorage.removeItem('user_id');
     };
 
     return (
@@ -28,6 +29,11 @@ export default function Header({ isLoggedIn, setIsLoggedIn, name, setName, setEm
                     {isLoggedIn ? (
                         <div className="flex items-center">
                             <span className="text-white mr-2">Welcome, {name}</span>
+                            <Link to="/profile">
+                                <button className="bg-blue-500 text-white px-3 py-1 rounded mr-2">
+                                    My Profile
+                                </button>
+                            </Link>
                             <button
                                 onClick={handleLogout}
                                 className="bg-red-500 text-white px-3 py-1 rounded"

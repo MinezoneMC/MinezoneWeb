@@ -16,28 +16,31 @@ class ReactSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField()  
+    author = serializers.StringRelatedField()
+    author_id = serializers.IntegerField(source='author.id', read_only=True)
     forum = serializers.StringRelatedField()   
 
     class Meta:
         model = Comment
-        fields = ['id', 'content', 'author', 'forum', 'created_at']
+        fields = ['id', 'content', 'author', 'author_id', 'forum', 'created_at']
 
 
 
 class ForumSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
+    author_id = serializers.IntegerField(source='author.id', read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Forum
-        fields = ['id','title', 'content', 'author', 'created_at', 'comments']
-
+        fields = ['id', 'title', 'content', 'author', 'author_id', 'created_at', 'comments']
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.name', read_only=True)
+
     class Meta:
         model = UserProfile
-        fields = ['id','user', 'bio', 'profile_pic']
+        fields = ['id', 'user', 'user_name', 'bio', 'profile_pic']
 
 
 class UserSerializer(serializers.ModelSerializer):
