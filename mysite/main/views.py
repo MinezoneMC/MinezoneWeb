@@ -87,11 +87,11 @@ class SignupView(APIView):
         )
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
             return Response({
-                "id": serializer.data["id"],
-                "name": serializer.data["name"],
-                "email": serializer.data["email"],
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
             }, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

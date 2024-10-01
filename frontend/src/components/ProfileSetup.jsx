@@ -1,3 +1,4 @@
+// ProfileSetup.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +12,12 @@ export default function ProfileSetup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!userId) {
+            alert('User ID not found. Please log in again.');
+            navigate('/login');
+            return;
+        }
 
         const formData = new FormData();
         formData.append('bio', bio);
