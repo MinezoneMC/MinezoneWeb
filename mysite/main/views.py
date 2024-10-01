@@ -179,7 +179,7 @@ class ForgotPasswordView(APIView):
             send_mail(
                 subject=subject,
                 message=content,
-                from_email=settings.EMAIL_HOST_USER,
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[email],
                 html_message=content,
             )
@@ -258,8 +258,6 @@ class CommentView(APIView):
 
 
 class UserProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
     def get(self, request, user_id):
         try:
             fetched_user = User.objects.get(id=user_id)
@@ -271,12 +269,9 @@ class UserProfileView(APIView):
 
     def post(self, request, user_id):
         try:
-            
-            fetched_user = User.objects.get(id=user_id)
-            data = UserProfile.objects.get(user=fetched_user)
-            serializer = UserProfileSerializer(data)
+            serializer = UserProfileSerializer(request.data)
             if serializer.is_valid():
-                serializer.save(id = data.user.id)
+                serializer.save(id = user_id)
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except UserProfile.DoesNotExist:
