@@ -29,7 +29,7 @@ export default function ForumsPage() {
                     </Link>
                 </div>
                 <p className="text-base sm:text-4xl text-gray-50 mb-8">
-                    Welcome to the Minezone Forums! Here you can discuss anything related to the server,
+                    Welcome to the Minezone Forums! Here you can discuss anything related to the server, 
                     post suggestions, report bugs, and more. We encourage you to be respectful and follow the rules.
                 </p>
 
@@ -37,13 +37,7 @@ export default function ForumsPage() {
                     <Link to={`/forum/${forum.id || forum._id}`} key={forum.id || forum._id} className="mb-4">
                         <div className="bg-gray-200 rounded-lg p-4 shadow-md hover:bg-gray-300 transition duration-300">
                             <h2 className="text-2xl font-semibold">{forum.title}</h2>
-                            <p className="text-gray-600">
-                                by{' '}
-                                <Link to={`/users/${forum.author_id}`} className="text-blue-500 hover:underline">
-                                    {forum.author}
-                                </Link>{' '}
-                                on {new Date(forum.created_at).toLocaleString()}
-                            </p>
+                            <p className="text-gray-600">by {forum.author} on {new Date(forum.created_at).toLocaleString()}</p>
                         </div>
                     </Link>
                 ))}

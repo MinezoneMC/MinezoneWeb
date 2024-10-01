@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
-export default function Login({ setIsLoggedIn, setName, setEmail, setProfilePic }) {
+export default function Login({ setIsLoggedIn, setName, setEmail }) {
     const [emailInput, setEmailInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
     const navigate = useNavigate();
@@ -14,28 +14,11 @@ export default function Login({ setIsLoggedIn, setName, setEmail, setProfilePic 
             password: passwordInput,
         })
             .then(response => {
+                console.log('Response data:', response.data);
                 setIsLoggedIn(true);
                 setName(response.data.user);
                 setEmail(response.data.email);
-
-                // Store login state in localStorage
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('name', response.data.user);
-                localStorage.setItem('email', response.data.email);
-                localStorage.setItem('user_id', response.data.user_id);
-
-                // Fetch user profile
-                axios.get(`http://localhost:8000/profile/${response.data.user_id}/`)
-                    .then(profileRes => {
-                        const profilePicUrl = profileRes.data.profile_pic;
-                        setProfilePic(profilePicUrl);
-                        localStorage.setItem('profile_pic', profilePicUrl);
-                        navigate('/'); // Redirect to home page
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        navigate('/'); // Redirect to home page even if profile fetch fails
-                    });
+                navigate('/'); // Redirect to home page
             })
             .catch(error => {
                 console.error(error);

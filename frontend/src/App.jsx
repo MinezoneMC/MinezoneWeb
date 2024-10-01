@@ -14,26 +14,24 @@ import ForumsPage from './components/ForumsPage';
 import ForumDetail from './components/ForumDetails'; 
 import PostForum from './components/PostForum';
 import ProfileSetup from './components/ProfileSetup';
-import ProfilePage from './components/ProfilePage';
-import UserProfile from './components/UserProfile';
 
 export default function App() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [profilePic, setProfilePic] = useState('');
+    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+        return JSON.parse(localStorage.getItem('isLoggedIn')) || false;
+    });
+    const [name, setName] = useState(() => {
+        return localStorage.getItem('name') || '';
+    });
+    const [email, setEmail] = useState(() => {
+        return localStorage.getItem('email') || '';
+    });
 
+    // Update localStorage whenever authentication state changes
     useEffect(() => {
-        // Load user data from localStorage
-        const storedIsLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        const storedName = localStorage.getItem('name');
-        const storedEmail = localStorage.getItem('email');
-        const storedProfilePic = localStorage.getItem('profile_pic');
-        setIsLoggedIn(storedIsLoggedIn);
-        setName(storedName);
-        setEmail(storedEmail);
-        setProfilePic(storedProfilePic);
-    }, []);
+        localStorage.setItem('isLoggedIn', JSON.stringify(isLoggedIn));
+        localStorage.setItem('name', name);
+        localStorage.setItem('email', email);
+    }, [isLoggedIn, name, email]);
 
     return (
         <BrowserRouter>
@@ -44,7 +42,6 @@ export default function App() {
                 email={email}
                 setName={setName}
                 setEmail={setEmail}
-                profilePic={profilePic}
             />
             <Routes>
                 <Route index element={<HomePage />} />
@@ -60,7 +57,6 @@ export default function App() {
                             setIsLoggedIn={setIsLoggedIn}
                             setName={setName}
                             setEmail={setEmail}
-                            setProfilePic={setProfilePic}
                         />
                     }
                 />
@@ -77,8 +73,6 @@ export default function App() {
                 <Route path="/forgotPassword" element={<ForgotPassword />} />
                 <Route path="/resetPassword" element={<ResetPassword />} />
                 <Route path="/profile-setup" element={<ProfileSetup />} />
-                <Route path="/profile" element={<ProfilePage setProfilePic={setProfilePic} />} />
-                <Route path="/users/:userId" element={<UserProfile />} />
             </Routes>
         </BrowserRouter>
     );
