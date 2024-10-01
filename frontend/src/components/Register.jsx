@@ -20,7 +20,10 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
                 setName(response.data.name);
                 setEmail(response.data.email);
 
-                // Store user id in localStorage
+                // Store login state in localStorage
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('name', response.data.name);
+                localStorage.setItem('email', response.data.email);
                 localStorage.setItem('user_id', response.data.id);
 
                 navigate('/profile-setup'); // Redirect to profile setup page

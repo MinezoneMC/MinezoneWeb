@@ -19,6 +19,7 @@ import uuid
 from django.utils import timezone
 from rest_framework import status, permissions
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import AllowAny
 
 URL = "http://localhost:5173"
 
@@ -71,21 +72,29 @@ class LoginView(APIView):
         password = request.data["password"]
         try:
             user = User.objects.get(email=email)
-            print(user.id)
         except User.DoesNotExist:
             return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         hashed_password = make_password(password=password, salt=user.salt)
         if user.password != hashed_password:
             return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
         else:
+            # Fetch user profile picture
+            try:
+                profile = UserProfile.objects.get(user=user)
+                profile_pic_url = profile.profile_pic.url if profile.profile_pic else None
+            except UserProfile.DoesNotExist:
+                profile_pic_url = None
+
             return Response({
                 "success": True,
                 "message": "You are now logged in!",
                 "user": user.name,
                 "email": user.email,
-                "user_id": user.id 
+                "user_id": user.id,
+                "profile_pic": profile_pic_url,
             }, status=status.HTTP_200_OK)
+
 
 
 class SignupView(APIView):
@@ -260,6 +269,7 @@ class CommentView(APIView):
 
 class UserProfileView(APIView):
     parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [AllowAny]  # Allow anyone to access this view
 
     def get(self, request, user_id):
         try:
@@ -281,3 +291,4 @@ class UserProfileView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function PostItem({ detail, id }) {
     function formatDate(dateString) {
         const date = new Date(dateString);
@@ -30,7 +32,13 @@ export default function PostItem({ detail, id }) {
                     </div>
                     <p>{detail.content}</p>
                     <div className="bg-gray-400 p-2">
-                        <p>Posted by {detail.author} on {formatDate(detail.created_at)}</p>
+                        <p>
+                            Posted by{' '}
+                            <Link to={`/users/${detail.author_id}`} className="text-blue-500 hover:underline">
+                                {detail.author}
+                            </Link>{' '}
+                            on {formatDate(detail.created_at)}
+                        </p>
                     </div>
                 </>
             ) : (

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-export default function ForumDetail({author}) {
+export default function ForumDetail({ author }) {
     const [forum, setForum] = useState(null);
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
@@ -55,7 +56,13 @@ export default function ForumDetail({author}) {
                 {comments.map((comment) => (
                     <div key={comment.id} className="bg-gray-700 p-4 rounded-lg mb-4">
                         <p>{comment.content}</p>
-                        <p className="text-sm text-gray-400 mt-2">by {comment.author} on {new Date(comment.created_at).toLocaleString()}</p>
+                        <p className="text-sm text-gray-400 mt-2">
+                            by{' '}
+                            <Link to={`/users/${comment.author_id}`} className="text-blue-500 hover:underline">
+                                {comment.author}
+                            </Link>{' '}
+                            on {new Date(comment.created_at).toLocaleString()}
+                        </p>
                     </div>
                 ))}
 

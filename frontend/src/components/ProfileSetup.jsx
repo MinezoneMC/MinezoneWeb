@@ -24,6 +24,7 @@ export default function ProfileSetup() {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+            localStorage.setItem('profile_pic', response.data.profile_pic);
             console.log('Profile updated:', response.data);
             navigate('/'); // Redirect to home page or wherever you like
         } catch (error) {
