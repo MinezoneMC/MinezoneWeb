@@ -1,4 +1,3 @@
-// ForumDetail.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
@@ -48,11 +47,9 @@ export default function ForumDetail({ author }) {
             <div className="flex flex-col h-max w-11/12 p-8 bg-[#11141E] text-white">
                 <h1 className="text-3xl sm:text-[4rem] font-bold mb-4">{forum.title}</h1>
                 <p className="text-gray-300 mb-8">
-                    by{' '}
-                    <Link to={`/user/${forum.author_id}`} className="text-blue-500 hover:underline">
+                    by <Link to={`/users/${forum.author_id}`} className="text-blue-500 hover:underline">
                         {forum.author}
-                    </Link>{' '}
-                    on {new Date(forum.created_at).toLocaleString()}
+                    </Link> on {new Date(forum.created_at).toLocaleString()}
                 </p>
                 <div className="bg-gray-800 p-6 rounded-lg mb-8">
                     <p className="text-lg">{forum.content}</p>
@@ -63,11 +60,9 @@ export default function ForumDetail({ author }) {
                     <div key={comment.id} className="bg-gray-700 p-4 rounded-lg mb-4">
                         <p>{comment.content}</p>
                         <p className="text-sm text-gray-400 mt-2">
-                            by{' '}
-                            <Link to={`/user-profile/${comment.author_id}`} className="text-blue-500 hover:underline">
+                            by <Link to={`/users/${comment.author_id}`} className="text-blue-400 hover:underline">
                                 {comment.author}
-                            </Link>{' '}
-                            on {new Date(comment.created_at).toLocaleString()}
+                            </Link> on {new Date(comment.created_at).toLocaleString()}
                         </p>
                     </div>
                 ))}

@@ -85,7 +85,7 @@ export default function App() {
                             setName={setName}
                         />
                     } />
-                <Route path="/user/:id" element={<UserProfilePage />} />
+                <Route path="/users/:id" element={<UserProfilePage />} />
             </Routes>
         </BrowserRouter>
     );

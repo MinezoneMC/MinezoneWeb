@@ -1,30 +1,27 @@
-from rest_framework import serializers 
-from . models import *
+from rest_framework import serializers
+from .models import *
 
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Token
         fields = ["token", "created_at", "expires_at", "user_id", "is_used"]
 
-class ReactSerializer(serializers.ModelSerializer): 
+class ReactSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
-    author_id = serializers.IntegerField(source='author.id', read_only=True)  # Add this line
+    author_id = serializers.IntegerField(source='author.id', read_only=True)
 
-    class Meta: 
-        model = Post 
+    class Meta:
+        model = Post
         fields = ['id', 'title', 'content', 'image', 'author', 'author_id', 'created_at']
-
 
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField()
     author_id = serializers.IntegerField(source='author.id', read_only=True)
-    forum = serializers.StringRelatedField()   
+    forum = serializers.StringRelatedField()
 
     class Meta:
         model = Comment
         fields = ['id', 'content', 'author', 'author_id', 'forum', 'created_at']
-
-
 
 class ForumSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
@@ -36,16 +33,18 @@ class ForumSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'content', 'author', 'author_id', 'created_at', 'comments']
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    user_name = serializers.CharField(source='user.name', read_only=True)
-
     class Meta:
         model = UserProfile
-        fields = ['id', 'user', 'user_name', 'bio', 'profile_pic']
-
+        fields = ['id', 'user', 'bio', 'profile_pic']
 
 class UserSerializer(serializers.ModelSerializer):
     profile = UserProfileSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ['profile','id', 'name', 'email', 'password','salt']
+        fields = ['profile', 'id', 'name', 'email', 'password', 'salt']
+
+class PublicUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name']
