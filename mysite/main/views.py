@@ -1,13 +1,11 @@
-from django.http import HttpResponse
-from .forms import PostForm
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
-from .models import Post
+from .models import *
 from .serializer import *
-from rest_framework.response import Response 
-from rest_framework.views import APIView 
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from django.contrib.auth.hashers import make_password
 from rest_framework import status
 from django.core.mail import send_mail
@@ -18,6 +16,7 @@ import hashlib
 import uuid
 from django.utils import timezone
 from rest_framework import status, permissions
+from rest_framework.parsers import MultiPartParser, FormParser
 
 URL = "http://localhost:5173"
 
@@ -42,26 +41,19 @@ def mail_template(content, button_url, button_text):
 
 class ReactView(APIView):
     def get(self, request, *args, **kwargs):
-        # Get all posts
         posts = Post.objects.all().order_by('-created_at')
-        
-        # Serialize posts
         serializer = ReactSerializer(posts, many=True)
-        # Check if the user can post
         can_post = request.user.groups.filter(name='CanMakePosts').exists()
-
-        # Return the serialized data as JSON
         return Response({
             'posts': serializer.data,
             'can_post': can_post
         }, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        serializer = ReactSerializer(data = request.data)
+        serializer = ReactSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):
@@ -73,7 +65,7 @@ class LoginView(APIView):
             print(user.id)
         except User.DoesNotExist:
             return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         hashed_password = make_password(password=password, salt=user.salt)
         if user.password != hashed_password:
             return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -83,24 +75,24 @@ class LoginView(APIView):
                 "message": "You are now logged in!",
                 "user": user.name,
                 "email": user.email,
-                "user_id": user.id 
+                "user_id": user.id
             }, status=status.HTTP_200_OK)
-
 
 class SignupView(APIView):
     def post(self, request, format=None):
         salt = uuid.uuid4().hex
-        
         request.data["salt"] = salt
         request.data["password"] = make_password(
             password=request.data["password"], salt=salt
         )
         serializer = UserSerializer(data=request.data)
-
         if serializer.is_valid():
-
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user = serializer.save()
+            return Response({
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+            }, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -133,7 +125,7 @@ class ResetPasswordView(APIView):
             token_obj.is_used = True
             hashed_password = make_password(password=password, salt=salt)
             ret_code = User.objects.filter(
-                id=user_id).update(password=hashed_password,salt = salt)
+                id=user_id).update(password=hashed_password, salt=salt)
             if ret_code:
                 token_obj.save()
                 return Response(
@@ -149,10 +141,9 @@ class ForgotPasswordView(APIView):
         email = request.data["email"]
         user = User.objects.get(email=email)
         created_at = timezone.now()
-        expires_at = timezone.now() + timezone.timedelta(1) # token expires in 1 day
+        expires_at = timezone.now() + timezone.timedelta(1)  # token expires in 1 day
         salt = uuid.uuid4().hex
 
-        # Generate token
         token = hashlib.sha512(
             (str(user.id) + user.password + created_at.isoformat() + salt).encode(
                 "utf-8"
@@ -193,7 +184,7 @@ class ForgotPasswordView(APIView):
         else:
             error_msg = ""
             for key in serializer.errors:
-                error_msg += serializer.errors[key][0] 
+                error_msg += serializer.errors[key][0]
             return Response(
                 {
                     "success": False,
@@ -201,24 +192,23 @@ class ForgotPasswordView(APIView):
                 },
                 status=status.HTTP_200_OK,
             )
-        
+
 class ForumView(APIView):
     def get(self, request):
         posts = Forum.objects.all().order_by('-created_at')
         serializer = ForumSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     def post(self, request):
         user_req = request.data["author"]
         user = User.objects.get(name=user_req)
         serializer = ForumSerializer(data=request.data)
-        print(request.data)
         if serializer.is_valid():
             serializer.save(author=user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
 class ForumDetailView(APIView):
     def get(self, request, forum_id):
         try:
@@ -227,7 +217,6 @@ class ForumDetailView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Forum.DoesNotExist:
             return Response({"message": "Forum not found"}, status=status.HTTP_404_NOT_FOUND)
-                
 
 class CommentView(APIView):
     def get(self, request, forum_id):
@@ -241,38 +230,58 @@ class CommentView(APIView):
             user_req = request.data.get("author")
             user = User.objects.get(name=user_req)
             comment_data = {
-                "content": request.data.get("content"), 
+                "content": request.data.get("content"),
             }
-            
-            serializer = CommentSerializer(data=comment_data)            
+
+            serializer = CommentSerializer(data=comment_data)
             if serializer.is_valid():
                 serializer.save(author=user, forum=forum)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
         except Forum.DoesNotExist:
             return Response({"message": "Forum not found"}, status=status.HTTP_404_NOT_FOUND)
         except User.DoesNotExist:
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-
 class UserProfileView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
     def get(self, request, user_id):
         try:
             fetched_user = User.objects.get(id=user_id)
-            data = UserProfile.objects.get(user=fetched_user)
-            serializer = UserProfileSerializer(data)
+            profile, created = UserProfile.objects.get_or_create(user=fetched_user)
+            serializer = UserProfileSerializer(profile)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except UserProfile.DoesNotExist:
-            return Response({"message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, user_id):
         try:
-            serializer = UserProfileSerializer(request.data)
+            fetched_user = User.objects.get(id=user_id)
+            profile, created = UserProfile.objects.get_or_create(user=fetched_user)
+            serializer = UserProfileSerializer(profile, data=request.data, partial=True)
             if serializer.is_valid():
-                serializer.save(id = user_id)
+                serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except UserProfile.DoesNotExist:
-            return Response({"message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class UserPublicProfileView(APIView):
+    def get(self, request, user_id):
+        try:
+            fetched_user = User.objects.get(id=user_id)
+            profile, created = UserProfile.objects.get_or_create(user=fetched_user)
+            profile_serializer = UserProfileSerializer(profile)
+
+            data = {
+                'id': fetched_user.id,
+                'name': fetched_user.name,
+                # 'email': fetched_user.email,  # Exclude email if you don't want to expose it
+                'bio': profile_serializer.data.get('bio', ''),
+                'profile_pic': profile_serializer.data.get('profile_pic', None),
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)

@@ -23,7 +23,7 @@ const games = [
         title: 'COMING SOON...',
         colorHex: '#FFFFFF',
         description: 'New games are on the way and will be available on the server soon.'
-    }
+    },
 ];
 
 export default games;

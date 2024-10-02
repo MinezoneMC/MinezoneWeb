@@ -11,8 +11,11 @@ import Register from './components/Register';
 import ForgotPassword from './components/ForgotPassword';
 import ResetPassword from './components/ResetPassword';
 import ForumsPage from './components/ForumsPage';
-import ForumDetail from './components/ForumDetails'; 
+import ForumDetail from './components/ForumDetails';
 import PostForum from './components/PostForum';
+import ProfileSetup from './components/ProfileSetup';
+import ProfilePage from './components/ProfilePage';
+import UserProfilePage from './components/UserProfilePage';
 
 export default function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -46,8 +49,8 @@ export default function App() {
                 <Route index element={<HomePage />} />
                 <Route path="/games" element={<GamePage />} />
                 <Route path="/forums" element={<ForumsPage />} />
-                <Route path="/forum/:id" element={<ForumDetail author={name}/>} />
-                <Route path="/create-forum" element={<PostForum author={name}/>}/>
+                <Route path="/forum/:id" element={<ForumDetail author={name} />} />
+                <Route path="/create-forum" element={<PostForum author={name} />} />
                 <Route path="/support" element={<SupportPage />} />
                 <Route
                     path="/login"
@@ -71,6 +74,18 @@ export default function App() {
                 />
                 <Route path="/forgotPassword" element={<ForgotPassword />} />
                 <Route path="/resetPassword" element={<ResetPassword />} />
+                <Route path="/profile-setup" element={<ProfileSetup />} />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProfilePage
+                            isLoggedIn={isLoggedIn}
+                            name={name}
+                            email={email}
+                            setName={setName}
+                        />
+                    } />
+                <Route path="/users/:id" element={<UserProfilePage />} />
             </Routes>
         </BrowserRouter>
     );

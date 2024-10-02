@@ -166,6 +166,7 @@ from dotenv import load_dotenv
 # Load the .env file
 load_dotenv()
 
+# Now use the environment variables
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_USE_TLS = True

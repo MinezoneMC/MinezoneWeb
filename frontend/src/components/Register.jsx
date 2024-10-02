@@ -1,3 +1,4 @@
+// Register.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -19,7 +20,14 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
                 setIsLoggedIn(true);
                 setName(response.data.name);
                 setEmail(response.data.email);
-                navigate('/'); // Redirect to home page
+
+                // Store user id in localStorage
+                localStorage.setItem('isLoggedIn', true);
+                localStorage.setItem('name', response.data.name);
+                localStorage.setItem('email', response.data.email);
+                localStorage.setItem('user_id', response.data.id);
+
+                navigate('/profile-setup'); // Redirect to profile setup page
             })
             .catch(error => {
                 console.error(error);
@@ -33,7 +41,7 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
                 className='bg-gray-200 flex flex-col justify-center items-center gap-4 p-4 rounded-md shadow-md m-4'>
                 <h2 className='text-4xl font-semibold'>Register</h2>
                 
-                <div className='bg-gray-200'>
+                <div>
                     <input
                         className='rounded-md'
                         placeholder='Name'
@@ -44,7 +52,7 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
                     />
                 </div>
 
-                <div className='bg-gray-200'>
+                <div>
                     <input
                         className='rounded-md'
                         placeholder='Email'
@@ -55,7 +63,7 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
                     />
                 </div>
 
-                <div className='bg-gray-200'>
+                <div>
                     <input
                         className='rounded-md'
                         placeholder='Password'
