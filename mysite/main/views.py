@@ -300,7 +300,7 @@ class UserSupport(APIView):
                 subject="Ticket",
                  message=f"User: {request.user.username}\nEmail: {request.user.email}\nDescription: {request.data['description']}",
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list= ['minezone@gmail.com'],
+                recipient_list= ['minezonemcofficial@gmail.com'],
             )
             serializer.save(user=request.user)  
             return Response(serializer.data, status=status.HTTP_201_CREATED)
