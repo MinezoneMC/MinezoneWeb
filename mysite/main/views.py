@@ -285,3 +285,23 @@ class UserPublicProfileView(APIView):
             return Response(data, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class UserSupport(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def get(self, request):
+        tickets = Ticket.objects.filter(user=request.user)
+        serializer = TicketSerializer(tickets, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = TicketSerializer(data=request.data)
+        if serializer.is_valid():
+            send_mail(
+                subject="Ticket",
+                 message=f"User: {request.user.username}\nEmail: {request.user.email}\nDescription: {request.data['description']}",
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list= ['minezone@gmail.com'],
+            )
+            serializer.save(user=request.user)  
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

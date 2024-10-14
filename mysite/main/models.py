@@ -59,3 +59,11 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user}'s Profile"
+    
+class Ticket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to the user
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.title

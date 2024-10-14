@@ -48,3 +48,8 @@ class PublicUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'name']
+
+class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ['id', 'description', 'created_at']
