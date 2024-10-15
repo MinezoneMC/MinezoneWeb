@@ -51,7 +51,7 @@ export default function Header({ isLoggedIn, setIsLoggedIn, name, setName, setEm
                 <HeaderButton name="Home" svg={HomeSVG} link="/" />
                 <HeaderButton name="Games" svg={ControllerSVG} link="/games" />
                 <HeaderButton name="Forums" svg={ForumSVG} link="/forums" />
-                <HeaderButton name="Support" svg={SupportSVG} link="https://discord.gg/ne3ZeXFsTw" />
+                <HeaderButton name="Support" svg={SupportSVG} link="/support" />
                 <HeaderButton name="Shop" svg={ShopSVG} link="https://minezone.tebex.io" />
 
             </div>

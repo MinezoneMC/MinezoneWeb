@@ -287,7 +287,7 @@ class UserPublicProfileView(APIView):
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class UserSupport(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    
     def get(self, request):
         tickets = Ticket.objects.filter(user=request.user)
         serializer = TicketSerializer(tickets, many=True)

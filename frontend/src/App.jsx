@@ -6,6 +6,7 @@ import Header from './components/Header';
 import HomePage from './components/HomePage';
 import GamePage from './components/GamePage';
 import SupportPage from './components/SupportPage';
+import CreateTicket from './components/CreateTicket';
 import Login from './components/Login';
 import Register from './components/Register';
 import ForgotPassword from './components/ForgotPassword';
@@ -52,6 +53,7 @@ export default function App() {
                 <Route path="/forum/:id" element={<ForumDetail author={name} />} />
                 <Route path="/create-forum" element={<PostForum author={name} />} />
                 <Route path="/support" element={<SupportPage />} />
+                <Route path="/create-ticket" element={<CreateTicket />} />
                 <Route
                     path="/login"
                     element={
