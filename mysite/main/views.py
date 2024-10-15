@@ -287,21 +287,17 @@ class UserPublicProfileView(APIView):
             return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class UserSupport(APIView):
-    
-    def get(self, request):
-        tickets = Ticket.objects.filter(user=request.user)
-        serializer = TicketSerializer(tickets, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
     def post(self, request):
+        request.data['user_id']
+        user = User.objects.get(id = request.data['user_id'])
         serializer = TicketSerializer(data=request.data)
         if serializer.is_valid():
             send_mail(
                 subject="Ticket",
-                 message=f"User: {request.user.username}\nEmail: {request.user.email}\nDescription: {request.data['description']}",
+                message=f"User: {user.name}\nEmail: {user.email}\nDescription: {request.data['description']}",
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list= ['minezonemcofficial@gmail.com'],
+                recipient_list= ['minezonetickets@gmail.com'],
             )
-            serializer.save(user=request.user)  
+            serializer.save(user=user)  
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

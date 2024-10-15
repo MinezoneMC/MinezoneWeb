@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function CreateTicket() {
+export default function CreateTicket({author}) {
     const [email, setEmail] = useState('');
     const [description, setDescription] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const user_id = localStorage.getItem('user_id');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -13,6 +14,7 @@ export default function CreateTicket() {
             const response = await axios.post('http://localhost:8000/supports/', {
                 email: email,
                 description: description,
+                user_id: user_id
             });
             console.log('Ticket created:', response.data);
             setSuccessMessage('Your ticket has been submitted successfully.');
