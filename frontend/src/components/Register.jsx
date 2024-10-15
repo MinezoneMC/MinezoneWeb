@@ -11,6 +11,12 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
 
     const handleRegister = (e) => {
         e.preventDefault();
+
+        if (passwordInput.length < 8) {
+            alert('Password must be at least 8 characters long.');
+            return;
+        }
+
         axios.post('http://localhost:8000/signup/', {
             name: nameInput,
             email: emailInput,
@@ -35,12 +41,13 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
             });
     };
 
+
     return (
         <div className="flex flex-col items-center gap-4 h-screen">
             <form onSubmit={handleRegister}
                 className='bg-gray-200 flex flex-col justify-center items-center gap-4 p-4 rounded-md shadow-md m-4'>
                 <h2 className='text-4xl font-semibold'>Register</h2>
-                
+
                 <div>
                     <input
                         className='rounded-md'

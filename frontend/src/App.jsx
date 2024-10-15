@@ -53,7 +53,7 @@ export default function App() {
                 <Route path="/forum/:id" element={<ForumDetail author={name} />} />
                 <Route path="/create-forum" element={<PostForum author={name} />} />
                 <Route path="/support" element={<SupportPage />} />
-                <Route path="/create-ticket" element={<CreateTicket author={name}/>} />
+                <Route path="/create-ticket" element={<CreateTicket email={email}/>} />
                 <Route
                     path="/login"
                     element={

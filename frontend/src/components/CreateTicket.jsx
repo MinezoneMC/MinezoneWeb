@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-export default function CreateTicket({author}) {
-    const [email, setEmail] = useState('');
+export default function CreateTicket({email}) {
     const [description, setDescription] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -19,7 +18,6 @@ export default function CreateTicket({author}) {
             console.log('Ticket created:', response.data);
             setSuccessMessage('Your ticket has been submitted successfully.');
             setErrorMessage('');
-            setEmail('');
             setDescription('');
         } catch (error) {
             console.error('Error creating ticket:', error);
@@ -35,16 +33,6 @@ export default function CreateTicket({author}) {
                 {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
                 {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-                    <div>
-                        <label className="block text-white text-lg mb-2">Email:</label>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
                     <div>
                         <label className="block text-white text-lg mb-2">Description:</label>
                         <textarea
