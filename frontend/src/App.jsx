@@ -49,7 +49,7 @@ export default function App() {
             <Routes>
                 <Route index element={<HomePage />} />
                 <Route path="/games" element={<GamePage />} />
-                <Route path="/forums" element={<ForumsPage />} />
+                <Route path="/forums" element={<ForumsPage isLoggedIn={isLoggedIn}/>} />
                 <Route path="/forum/:id" element={<ForumDetail author={name} />} />
                 <Route path="/create-forum" element={<PostForum author={name} />} />
                 <Route path="/support" element={<SupportPage />} />
