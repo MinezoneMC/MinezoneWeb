@@ -95,11 +95,11 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mydb',
-        'USER': 'root',
-        'PASSWORD': 'sakarabaya',
-        'HOST': 'localhost',  # Leave this as localhost.
-        'PORT': '3306',       # Default MySQL port.
+        'NAME': 'minezonedb',
+        'USER': 'admin',
+        'PASSWORD': 'minezonemc_passwordforstaff_123432',
+        'HOST': 'minezonedb.cv8m8282u9mv.us-east-2.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 
