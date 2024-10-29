@@ -62,7 +62,6 @@ class LoginView(APIView):
         password = request.data["password"]
         try:
             user = User.objects.get(email=email)
-            print(user.id)
         except User.DoesNotExist:
             return Response({"success": False, "message": "Invalid Login Credentials!"}, status=status.HTTP_400_BAD_REQUEST)
 
