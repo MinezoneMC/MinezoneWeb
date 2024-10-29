@@ -26,7 +26,7 @@ export default function ProfileSetup() {
         }
 
         try {
-            const response = await axios.post(`http://localhost:8000/profile/${userId}/`, formData, {
+            const response = await axios.post(`http://18.222.210.193:8000/profile/${userId}/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

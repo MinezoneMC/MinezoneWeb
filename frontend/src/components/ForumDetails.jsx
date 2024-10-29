@@ -11,10 +11,10 @@ export default function ForumDetail({ author }) {
     useEffect(() => {
         const fetchForumAndComments = async () => {
             try {
-                const forumResponse = await axios.get(`http://localhost:8000/forum/${id}/`);
+                const forumResponse = await axios.get(`http://18.222.210.193:8000/forum/${id}/`);
                 setForum(forumResponse.data);
 
-                const commentsResponse = await axios.get(`http://localhost:8000/forums/${id}/comments/`);
+                const commentsResponse = await axios.get(`http://18.222.210.193:8000/forums/${id}/comments/`);
                 setComments(commentsResponse.data);
             } catch (error) {
                 console.error('Error fetching forum details:', error);
@@ -27,7 +27,7 @@ export default function ForumDetail({ author }) {
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`http://localhost:8000/forums/${id}/comments/`, {
+            const response = await axios.post(`http://18.222.210.193:8000/forums/${id}/comments/`, {
                 content: newComment,
                 author: author
             });

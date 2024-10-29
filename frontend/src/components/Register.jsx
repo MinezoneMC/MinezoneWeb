@@ -17,7 +17,7 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
             return;
         }
 
-        axios.post('http://localhost:8000/signup/', {
+        axios.post('http://18.222.210.193:8000/signup/', {
             name: nameInput,
             email: emailInput,
             password: passwordInput,

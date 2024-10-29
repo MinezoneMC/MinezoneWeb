@@ -8,7 +8,7 @@ export default function ForgotPassword() {
 
     const handleForgotPassword = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8000/forgotPassword/', {
+        axios.post('http://18.222.210.193:8000/forgotPassword/', {
             email: emailInput,
         })
             .then(response => {

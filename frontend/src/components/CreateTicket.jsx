@@ -10,7 +10,7 @@ export default function CreateTicket({email}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/supports/', {
+            const response = await axios.post('http://18.222.210.193:8000/supports/', {
                 email: email,
                 description: description,
                 user_id: user_id

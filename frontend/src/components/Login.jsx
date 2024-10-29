@@ -9,7 +9,7 @@ export default function Login({ setIsLoggedIn, setName, setEmail }) {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        axios.post('http://localhost:8000/login/', {
+        axios.post('http://18.222.210.193:8000/login/', {
             email: emailInput,
             password: passwordInput,
         })
