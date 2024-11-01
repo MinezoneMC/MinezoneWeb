@@ -11,7 +11,7 @@ export default function UserProfilePage() {
 
     useEffect(() => {
         // Fetch the user's profile data
-        axios.get(`http://www.minezone.site/users/${id}/`)
+        axios.get(`http://minezone.site/users/${id}/`)
             .then(response => {
                 setBio(response.data.bio || '');
                 setProfilePic(response.data.profile_pic);
@@ -29,7 +29,7 @@ export default function UserProfilePage() {
             <div className='bg-white flex flex-col justify-center items-center gap-4 p-4 rounded-md shadow-md m-4'>
                 {profilePic ? (
                     <img
-                        src={`http://www.minezone.site${profilePic}`}
+                        src={`http://minezone.site${profilePic}`}
                         alt="Profile"
                         className='h-32 w-32 object-cover rounded-full'
                     />

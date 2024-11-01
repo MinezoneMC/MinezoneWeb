@@ -8,7 +8,7 @@ export default function HomePage() {
     const postsPerPage = 5; // Number of posts per page
 
     useEffect(() => {
-        axios.get('http://www.minezone.site')
+        axios.get('http://minezone.site')
             .then(res => {
                 setDetails(res.data.posts);
             })

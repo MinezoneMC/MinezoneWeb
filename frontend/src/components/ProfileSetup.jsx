@@ -26,7 +26,7 @@ export default function ProfileSetup() {
         }
 
         try {
-            const response = await axios.post(`http://www.minezone.site/profile/${userId}/`, formData, {
+            const response = await axios.post(`http://minezone.site/profile/${userId}/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

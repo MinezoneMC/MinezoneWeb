@@ -10,7 +10,7 @@ export default function CreateTicket({email}) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://www.minezone.site/supports/', {
+            const response = await axios.post('http://minezone.site/supports/', {
                 email: email,
                 description: description,
                 user_id: user_id

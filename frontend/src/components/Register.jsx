@@ -17,7 +17,7 @@ export default function Register({ setIsLoggedIn, setName, setEmail }) {
             return;
         }
 
-        axios.post('http://www.minezone.site/signup/', {
+        axios.post('http://minezone.site/signup/', {
             name: nameInput,
             email: emailInput,
             password: passwordInput,

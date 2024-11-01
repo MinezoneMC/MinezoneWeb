@@ -9,7 +9,7 @@ export default function Login({ setIsLoggedIn, setName, setEmail }) {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        axios.post('http://www.minezone.site/login/', {
+        axios.post('http://minezone.site/login/', {
             email: emailInput,
             password: passwordInput,
         })

@@ -160,6 +160,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CORS_ORIGIN_ALLOW_ALL = True 
 CORS_ALLOWED_ORIGINS = [
     "http://minezone.s3-website.us-east-2.amazonaws.com",
+    "http://minezone.site",
+    "http://www.minezone.site",
 ]
 
 

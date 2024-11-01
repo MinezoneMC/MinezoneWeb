@@ -30,7 +30,7 @@ export default function ResetPassword() {
             return;
         }
 
-        axios.post('http://www.minezone.site/resetPassword/', {
+        axios.post('http://minezone.site/resetPassword/', {
             id: userId,
             token: token,
             password: passwordInput,
