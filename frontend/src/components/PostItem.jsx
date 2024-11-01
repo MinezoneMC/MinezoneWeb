@@ -23,7 +23,7 @@ export default function PostItem({ detail, id }) {
                     <h1 className="text-4xl font-semibold">{detail.title}</h1>
                     <div>
                         <img
-                            src={`http://18.222.210.193:8000${detail.image}`}
+                            src={`http://www.minezone.site${detail.image}`}
                             alt=''
                             className="max-h-[16rem]"
                         />

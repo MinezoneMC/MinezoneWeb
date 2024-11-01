@@ -12,7 +12,7 @@ export default function ProfilePage({ isLoggedIn, name, email, setName }) {
 
     useEffect(() => {
         // Fetch the user's profile data
-        axios.get(`http://18.222.210.193:8000/profile/${userId}/`)
+        axios.get(`http://www.minezone.site/profile/${userId}/`)
             .then(response => {
                 setBio(response.data.bio || '');
                 setProfilePic(response.data.profile_pic);
@@ -43,7 +43,7 @@ export default function ProfilePage({ isLoggedIn, name, email, setName }) {
             formData.append('profile_pic', profilePic);
         }
 
-        axios.post(`http://18.222.210.193:8000/profile/${userId}/`, formData, {
+        axios.post(`http://www.minezone.site/${userId}/`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -120,7 +120,7 @@ export default function ProfilePage({ isLoggedIn, name, email, setName }) {
                                     ? profilePicPreview
                                     : profilePic.startsWith('http') || profilePic.startsWith('data:')
                                         ? profilePic
-                                        : `http://18.222.210.193:8000${profilePic}`
+                                        : `http://www.minezone.site${profilePic}`
                             }
                             alt="Profile"
                             className='h-32 w-32 object-cover rounded-full'

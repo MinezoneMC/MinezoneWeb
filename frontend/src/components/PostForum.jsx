@@ -14,7 +14,7 @@ export default function PostForum({author}) {
         setError('');
 
         try {
-            const response = await axios.post('http://18.222.210.193:8000/forum/', {
+            const response = await axios.post('http://www.minezone.site/forum/', {
                 title,
                 content,
                 author

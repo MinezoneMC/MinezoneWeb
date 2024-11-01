@@ -8,7 +8,7 @@ export default function ForumsPage({ isLoggedIn }) {
     useEffect(() => {
         const fetchForums = async () => {
             try {
-                const response = await axios.get('http://18.222.210.193:8000/forum/');
+                const response = await axios.get('http://www.minezone.site/forum/');
                 console.log('Forum data:', response.data);
                 setForums(response.data);
             } catch (error) {

@@ -9,7 +9,7 @@ export default function Login({ setIsLoggedIn, setName, setEmail }) {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        axios.post('http://18.222.210.193:8000/login/', {
+        axios.post('http://www.minezone.site/login/', {
             email: emailInput,
             password: passwordInput,
         })
