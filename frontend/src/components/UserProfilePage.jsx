@@ -11,7 +11,7 @@ export default function UserProfilePage() {
 
     useEffect(() => {
         // Fetch the user's profile data
-        axios.get(`http://minezone.site/users/${id}/`)
+        axios.get(`http://minezone.site/users/api/${id}/`)
             .then(response => {
                 setBio(response.data.bio || '');
                 setProfilePic(response.data.profile_pic);

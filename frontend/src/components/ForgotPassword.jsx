@@ -8,7 +8,7 @@ export default function ForgotPassword() {
 
     const handleForgotPassword = (e) => {
         e.preventDefault();
-        axios.post('http://minezone.site/forgotPassword/', {
+        axios.post('http://minezone.site/api/forgotPassword/', {
             email: emailInput,
         })
             .then(response => {

@@ -11,10 +11,10 @@ export default function ForumDetail({ author }) {
     useEffect(() => {
         const fetchForumAndComments = async () => {
             try {
-                const forumResponse = await axios.get(`http://minezone.site/forum/${id}/`);
+                const forumResponse = await axios.get(`http://minezone.site/api/forum/${id}/`);
                 setForum(forumResponse.data);
 
-                const commentsResponse = await axios.get(`http://minezone.site/forums/${id}/comments/`);
+                const commentsResponse = await axios.get(`http://minezone.site/api/forums/${id}/comments/`);
                 setComments(commentsResponse.data);
             } catch (error) {
                 console.error('Error fetching forum details:', error);
@@ -27,7 +27,7 @@ export default function ForumDetail({ author }) {
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`http://minezone.site/forums/${id}/comments/`, {
+            const response = await axios.post(`http://minezone.site/api/forums/${id}/comments/`, {
                 content: newComment,
                 author: author
             });

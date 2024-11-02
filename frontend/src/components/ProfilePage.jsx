@@ -12,7 +12,7 @@ export default function ProfilePage({ isLoggedIn, name, email, setName }) {
 
     useEffect(() => {
         // Fetch the user's profile data
-        axios.get(`http://minezone.site/profile/${userId}/`)
+        axios.get(`http://minezone.site/api/profile/${userId}/`)
             .then(response => {
                 setBio(response.data.bio || '');
                 setProfilePic(response.data.profile_pic);
@@ -43,7 +43,7 @@ export default function ProfilePage({ isLoggedIn, name, email, setName }) {
             formData.append('profile_pic', profilePic);
         }
 
-        axios.post(`http://minezone.site/${userId}/`, formData, {
+        axios.post(`http://minezone.site/api/${userId}/`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
